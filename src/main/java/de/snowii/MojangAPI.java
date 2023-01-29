@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
+@SuppressWarnings("unused")
 public class MojangAPI {
     private static final Map<UUID, GameProfile> cachedUUIDProfiles = new HashMap<>();
     private static final Map<String, GameProfile> cachedNameProfiles = new HashMap<>();

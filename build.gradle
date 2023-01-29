@@ -1,5 +1,6 @@
 plugins {
     id 'java-library'
+    id 'maven-publish'
 }
 
 group 'de.snowii'
@@ -17,6 +18,26 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 }
+
+
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = group
+            artifactId = 'mojang-api'
+            version = version
+            from components.java
+
+            pom {
+                name = 'Mojang-API'
+                description = 'Simple & User Friendly Java Mojang API'
+            }
+        }
+    }
+}
+
+
 
 test {
     useJUnitPlatform()

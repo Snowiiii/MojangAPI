@@ -13,7 +13,7 @@ repositories {
 }
 
 publishData {
-    useEldoNexusRepos(useMain = true)
+    useEldoNexusRepos(useMain = false)
     publishComponent("java")
 }
 

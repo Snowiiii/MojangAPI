@@ -42,7 +42,7 @@ publishing {
                 }
             }
 
-            name = "Mojang-API"
+            name = "EldoNexus"
             setUrl(publishData.getRepository())
         }
     }

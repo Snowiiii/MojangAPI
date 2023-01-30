@@ -39,7 +39,7 @@ jobs:
     - name: Publish to GitHub Packages
       uses: gradle/gradle-build-action@3fbe033aaae657f011f88f29be9e65ed26bd29ef
       with:
-        arguments: publish
+        arguments: publishMavenPublicationToEldoNexusRepository
       env:
-        USERNAME: ${{ github.actor }}
-        TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        NEXUS_USERNAME: ${{ github.actor }}
+        NEXUS_PASSWORD: ${{ secrets.GITHUB_TOKEN }}

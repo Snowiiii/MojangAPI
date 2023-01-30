@@ -13,33 +13,24 @@ on:
 
 jobs:
   build:
-
+    environment: build
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up JDK 17
-      uses: actions/setup-java@v3
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
-        settings-path: ${{ github.workspace }} # location for the settings.xml file
-
-    - name: Build with Gradle
-      uses: gradle/gradle-build-action@3fbe033aaae657f011f88f29be9e65ed26bd29ef
-      with:
-        arguments: build
-
-    # The USERNAME and TOKEN need to correspond to the credentials environment variables used in
-    # the publishing section of your build.gradle.kts
-    - name: Publish to GitHub Packages
-      uses: gradle/gradle-build-action@3fbe033aaae657f011f88f29be9e65ed26bd29ef
-      with:
-        arguments: publishMavenPublicationToEldoNexusRepository
-      env:
-        NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
-        NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
+      - uses: actions/checkout@v3.0.2
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          # Set your java version here
+          java-version: 17
+      - name: Build with Gradle
+        run: ./gradlew --build-cache build
+      - name: Test with Gradle
+        run: ./gradlew test
+      - name: Publish to eldonexus
+        run: ./gradlew publishMavenPublicationToEldoNexusRepository
+        env:
+          # Those credentials need to be set under "Settings -> Secrets -> Actions" in your repository
+          NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
+          NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}

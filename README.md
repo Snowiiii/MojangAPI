@@ -13,7 +13,7 @@
 ```xml
 <dependency>
     <groupId>de.snowii</groupId>
-    <artifactId>de.snowii:mojang-api</artifactId>
+    <artifactId>mojang-api</artifactId>
     <version>1.0.0</version>
 </dependency>
 ```

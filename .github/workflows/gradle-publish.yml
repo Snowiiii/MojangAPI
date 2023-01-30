@@ -35,7 +35,7 @@ jobs:
         arguments: build
 
     # The USERNAME and TOKEN need to correspond to the credentials environment variables used in
-    # the publishing section of your build.gradle
+    # the publishing section of your build.gradle.kts
     - name: Publish to GitHub Packages
       uses: gradle/gradle-build-action@3fbe033aaae657f011f88f29be9e65ed26bd29ef
       with:

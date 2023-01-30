@@ -1,4 +1,4 @@
-rootProject.name = "MojangAPI"
+rootProject.name = "Mojang-API"
 
 pluginManagement {
     repositories {

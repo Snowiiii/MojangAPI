@@ -41,5 +41,5 @@ jobs:
       with:
         arguments: publishMavenPublicationToEldoNexusRepository
       env:
-        NEXUS_USERNAME: ${{ github.actor }}
-        NEXUS_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+        NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
+        NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}

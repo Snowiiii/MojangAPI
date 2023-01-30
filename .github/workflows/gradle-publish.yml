@@ -9,8 +9,12 @@ name: Gradle Package
 
 on:
   workflow_dispatch:
-  release:
-    types: [created]
+  push:
+    branches:
+      - master
+      - dev*
+      - feature/*
+      - release/*
 
 jobs:
   build:

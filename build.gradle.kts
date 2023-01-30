@@ -13,7 +13,7 @@ repositories {
 }
 
 publishData {
-    useEldoNexusRepos()
+    useEldoNexusRepos(useMain = true)
     publishComponent("java")
 }
 
@@ -42,6 +42,7 @@ publishing {
                 }
             }
 
+            name = "Mojang-API"
             setUrl(publishData.getRepository())
         }
     }

@@ -1,6 +1,35 @@
 # Mojang API for Java 
 
 ### Getting Started
+#### Maven
+```xml
+<repositories>
+    <repository>
+        <id>eldonexus-repo</id>
+        <url>https://eldonexus.de/repository/maven-public/</url>
+    </repository>
+</repositories>
+```
+```xml
+<dependency>
+    <groupId>de.snowii</groupId>
+    <artifactId>de.snowii:mojang-api</artifactId>
+    <version>1.0.0</version>
+</dependency>
+```
+#### Gradle
+```groovy
+repositories {
+    mavenCentral()
+    maven("https://eldonexus.de/repository/maven-public/")
+}
+```
+```groovy
+dependencies {
+    implementation("de.snowii:mojang-api:1.0.0")
+}
+```
+
 If your using a Proxy you Probably should set it at the Begging
 ```java
         MojangJSONParser.setProxy(<proxy>);

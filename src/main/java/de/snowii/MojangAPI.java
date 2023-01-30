@@ -56,6 +56,7 @@ public class MojangAPI {
         return textureProperties;
     }
 
+
     public static @Nullable NameAvailability getNameAvailability(final @NotNull String name, final boolean cache) {
         if (cachedNameAvailabilities.containsKey(name)) return cachedNameAvailabilities.get(name);
         JsonObject object = MojangJSONParser.parseURL("https://api.minecraftservices.com/minecraft/profile/" + name + "/available");

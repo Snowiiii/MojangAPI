@@ -1,16 +1,17 @@
 package de.snowii.parse;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.Proxy;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 
 public class MojangJSONParser {
@@ -38,6 +39,19 @@ public class MojangJSONParser {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static URLConnection openConnection(URL url) throws IOException {
+       return  (proxy != null ? url.openConnection(proxy) : url.openConnection());
+    }
+
+    public static JsonElement parseConnection(URLConnection connection)
+            throws IOException {
+        try (InputStream input = connection.getInputStream()) {
+            InputStreamReader reader = new InputStreamReader(input);
+            BufferedReader bufferedReader = new BufferedReader(reader);
+            return JsonParser.parseReader(bufferedReader);
+        }
     }
 
     public static void setProxy(Proxy proxy) {

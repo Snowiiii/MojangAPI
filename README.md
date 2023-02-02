@@ -14,7 +14,7 @@
 <dependency>
     <groupId>de.snowii</groupId>
     <artifactId>mojang-api</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 </dependency>
 ```
 #### Gradle

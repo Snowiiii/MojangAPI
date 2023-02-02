@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "de.snowii"
-version = "1.0.0"
+version = "1.0.1"
 description = "Simple & User Friendly Java Mojang API"
 
 repositories {

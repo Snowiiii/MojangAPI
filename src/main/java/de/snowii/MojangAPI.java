@@ -19,8 +19,8 @@ import java.util.*;
 
 @SuppressWarnings("unused")
 public class MojangAPI {
-    private static final Map<UUID, GameProfile> cachedUUIDProfiles = new HashMap<>();
-    private static final Map<String, GameProfile> cachedNameProfiles = new HashMap<>();
+    private static final Map<UUID, GameProfile> cachedUUIDProfiles = Collections.synchronizedMap(new HashMap<>());
+    private static final Map<String, GameProfile> cachedNameProfiles = Collections.synchronizedMap(new HashMap<>());
 
     private static final Map<String, NameAvailability> cachedNameAvailabilities = new HashMap<>();
 
@@ -35,12 +35,14 @@ public class MojangAPI {
         return gameProfile;
     }
 
+    /**
+     * @return a GameProfile but without Skin Properties
+     */
     public static @Nullable GameProfile getGameProfile(final @NotNull String name, final boolean cache) {
         if (cachedNameProfiles.containsKey(name)) return cachedNameProfiles.get(name);
         JsonObject object = MojangJSONParser.parseURL("https://api.mojang.com/users/profiles/minecraft/" + name + "?unsigned=false");
         if (object == null) return null;
         GameProfile gameProfile = new GameProfile(name, UUIDConverter.fromStringWithoutDashes(object.get("id").getAsString()));
-        gameProfile.setTextureProperties(parseTextureProperties(object));
         if (cache) cachedNameProfiles.put(name, gameProfile);
         return gameProfile;
     }

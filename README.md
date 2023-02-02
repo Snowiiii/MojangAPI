@@ -26,7 +26,7 @@ repositories {
 ```
 ```groovy
 dependencies {
-    implementation("de.snowii:mojang-api:1.0.0")
+    implementation("de.snowii:mojang-api:1.0.1")
 }
 ```
 

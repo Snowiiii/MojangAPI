@@ -19,7 +19,7 @@ publishData {
 
 dependencies {
     implementation("com.google.code.gson:gson:2.10.1")
-    implementation("org.jetbrains:annotations:24.0.0")
+    implementation("org.jetbrains:annotations:24.0.1")
 
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")

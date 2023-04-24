@@ -1,8 +1,14 @@
-# Mojang API for Java 
+### Mojang API for Java
 
+The Mojang API for Java is a library that provides Java developers with an easy-to-use interface for accessing Mojang's APIs. This library makes it simple to fetch game profiles and UUIDs from Mojang's servers, and cache them locally for faster access.
 ### Getting Started
-#### Maven
-```xml
+
+To get started with the Mojang API for Java, you can add it to your Maven or Gradle project as a dependency.
+Maven
+
+Add the following repository to your pom.xml file:
+
+xml```
 <repositories>
     <repository>
         <id>eldonexus-repo</id>
@@ -10,41 +16,66 @@
     </repository>
 </repositories>
 ```
-```xml
+
+Then add the dependency:
+
+xml```
 <dependency>
     <groupId>de.snowii</groupId>
     <artifactId>mojang-api</artifactId>
     <version>1.0.1</version>
 </dependency>
 ```
-#### Gradle
-```groovy
+
+### Gradle
+
+Add the following repository to your build.gradle file:
+
+groovy```
 repositories {
     mavenCentral()
     maven("https://eldonexus.de/repository/maven-public/")
 }
 ```
-```groovy
+
+Then add the dependency:
+
+groovy```
 dependencies {
     implementation("de.snowii:mojang-api:1.0.1")
 }
 ```
 
-If your using a Proxy you Probably should set it at the Begging
-```java
-        MojangJSONParser.setProxy(<proxy>);
+### Using the API
+
+Once you have added the library to your project, you can use the API in the MojangAPI class. For example, to get a GameProfile object for a given username:
+
+java
+
+GameProfile profile = MojangAPI.getGameProfile("Notch", true);
+
+You can also get a GameProfile by UUID:
+
+java```
+GameProfile profile = MojangAPI.getGameProfile(UUID.fromString("7bd9c2cb-079f-4f5b-925d-4bffdcf24aa8"), true);
 ```
 
-after this you can use the API in the MojangAPI class, for example
-```java
-        GameProfile profile = MojangAPI.getGameProfile("Notch", true);
+The boolean parameter in both methods tells the API whether to cache the profile or not. It is highly recommended to enable caching if you will be using the same profile multiple times.
+
+If you do use the cache, it's important to clear it when you're done using the API:
+
+java```
+MojangAPI.clearCache();
 ```
-the same with UUID's 
-```java
-        GameProfile profile = MojangAPI.getGameProfile(UUID.fromString("7bd9c2cb-079f-4f5b-925d-4bffdcf24aa8"), true);
+
+Using a Proxy
+
+If you are using a proxy, you can set it at the beginning of your code with:
+
+java```
+MojangJSONParser.setProxy(<proxy>);
 ```
-the boolean tells if the Profile should be cached this is highly recommended if your want u use the Same Profile several times,
-But if your using cache you should clear it at the End Also using:
-```java
-        MojangAPI.clearCache();
-```
+
+### Conclusion
+
+The Mojang API for Java is a powerful tool for Java developers who want to interact with Mojang's APIs. By using this library, you can quickly and easily fetch game profiles and UUIDs, and cache them for faster access.

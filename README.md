@@ -38,54 +38,6 @@ dependencies {
 }
 ```
 
-Mojang API for Java
-
-The Mojang API for Java is a library that provides Java developers with an easy-to-use interface for accessing Mojang's APIs. This library makes it simple to fetch game profiles and UUIDs from Mojang's servers, and cache them locally for faster access.
-Getting Started
-
-To get started with the Mojang API for Java, you can add it to your Maven or Gradle project as a dependency.
-Maven
-
-Add the following repository to your pom.xml file:
-
-xml
-
-<repositories>
-    <repository>
-        <id>eldonexus-repo</id>
-        <url>https://eldonexus.de/repository/maven-public/</url>
-    </repository>
-</repositories>
-
-Then add the dependency:
-
-xml
-
-<dependency>
-    <groupId>de.snowii</groupId>
-    <artifactId>mojang-api</artifactId>
-    <version>1.0.1</version>
-</dependency>
-
-Gradle
-
-Add the following repository to your build.gradle file:
-
-groovy
-
-repositories {
-    mavenCentral()
-    maven("https://eldonexus.de/repository/maven-public/")
-}
-
-Then add the dependency:
-
-groovy
-
-dependencies {
-    implementation("de.snowii:mojang-api:1.0.1")
-}
-
 ### Using the API
 
 Once you have added the library to your project, you can use the API in the MojangAPI class. For example, to get a GameProfile object for a given username:

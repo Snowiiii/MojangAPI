@@ -19,20 +19,19 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @SuppressWarnings("unused")
-public class MojangAPI {
+public class MojangAPI implements AutoCloseable {
     private static final Map<UUID, GameProfile> cachedUUIDProfiles = new ConcurrentHashMap<>();
     private static final Map<String, GameProfile> cachedNameProfiles = new ConcurrentHashMap<>();
 
     private static final Map<String, NameAvailability> cachedNameAvailabilities = new ConcurrentHashMap<>();
 
 
-    public static @Nullable GameProfile getGameProfile(final @NotNull UUID uuid, final boolean cache) {
+    public static @Nullable GameProfile getGameProfile(final @NotNull UUID uuid) {
         return cachedUUIDProfiles.computeIfAbsent(uuid, (key) -> {
             JsonObject object = MojangJSONParser.parseURL("https://sessionserver.mojang.com/session/minecraft/profile/" + key + "?unsigned=false");
             if (object == null) return null;
             GameProfile gameProfile = new GameProfile(object.get("name").getAsString(), key);
             gameProfile.setTextureProperties(parseTextureProperties(object));
-            if (cache) cachedUUIDProfiles.put(key, gameProfile);
             return gameProfile;
         });
     }
@@ -40,14 +39,12 @@ public class MojangAPI {
     /**
      * @return a GameProfile but without Skin Properties
      */
-    public static @Nullable GameProfile getGameProfile(final @NotNull String name, final boolean cache) {
+    public static @Nullable GameProfile getGameProfile(final @NotNull String name) {
         return cachedNameProfiles.computeIfAbsent(name, (key) -> {
             JsonObject object = MojangJSONParser.parseURL("https://api.mojang.com/users/profiles/minecraft/" + key + "?unsigned=false");
             if (object == null) return null;
             UUID uuid = UUIDConverter.fromStringWithoutDashes(object.get("id").getAsString());
-            GameProfile gameProfile = new GameProfile(name, uuid);
-            if (cache) cachedNameProfiles.put(name, gameProfile);
-            return gameProfile;
+            return new GameProfile(name, uuid);
         });
     }
 
@@ -71,13 +68,11 @@ public class MojangAPI {
      *
      * @return NameAvailability Enum
      */
-    public static @Nullable NameAvailability getNameAvailability(final @NotNull String name, final boolean cache) {
+    public static @Nullable NameAvailability getNameAvailability(final @NotNull String name) {
         return cachedNameAvailabilities.computeIfAbsent(name, (key) -> {
             JsonObject object = MojangJSONParser.parseURL("https://api.minecraftservices.com/minecraft/profile/" + key + "/available");
             if (object == null) return null;
-            NameAvailability availability = NameAvailability.valueOf(object.get("status").getAsString());
-            if (cache) cachedNameAvailabilities.put(name, availability);
-            return availability;
+            return NameAvailability.valueOf(object.get("status").getAsString());
         });
     }
 
@@ -127,6 +122,7 @@ public class MojangAPI {
         }
     }
 
+
     /**
      * <a href="https://wiki.vg/Microsoft_Authentication_Scheme#Authenticate_with_Minecraft">Authenticate with Minecraft</a>
      *
@@ -160,16 +156,24 @@ public class MojangAPI {
         }
     }
 
-    public record XBoxLiveToken(String token, String userhash) {
-
-    }
-
-
     public static void clearCache() {
         cachedUUIDProfiles.clear();
         cachedNameProfiles.clear();
         cachedNameAvailabilities.clear();
     }
 
+    @Override
+    public void close() {
+        clearCache();
+    }
+
+    public record XBoxLiveToken(String token, String userhash) {
+
+    }
+
+    public static class AuthTokenResponse {
+        public String access_token;
+        public String refresh_token;
+    }
 
 }

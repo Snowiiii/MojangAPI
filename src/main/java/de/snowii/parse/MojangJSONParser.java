@@ -8,41 +8,41 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.Proxy;
-import java.net.URL;
-import java.net.URLConnection;
+import java.net.*;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 
 public class MojangJSONParser {
+    private static HttpClient HTTP_CLIENT = HttpClient.newBuilder()
+            .version(HttpClient.Version.HTTP_2)
+            .build();
     private static final Gson GSON = new Gson();
-
-    private static Proxy proxy;
 
     public static @Nullable JsonObject parseURL(final @NotNull String purl) {
         try {
-            final URL url = new URL(purl);
-            final HttpURLConnection connection = (HttpURLConnection) (proxy != null ? url.openConnection(proxy) : url.openConnection());
-            if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                throw new IllegalStateException("Failed to do a HTTP request to: " + purl + " Response code: " + connection.getResponseCode());
-            }
-            try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.US_ASCII))) {
-                String inputLine;
-                final StringBuilder sb = new StringBuilder();
-                while ((inputLine = in.readLine()) != null) {
-                    sb.append(inputLine);
-                }
-                return GSON.fromJson(sb.toString(), JsonObject.class);
+            URI uri = new URI(purl);
+            HttpRequest request = HttpRequest.newBuilder(uri)
+                    .GET()
+                    .build();
+
+            HttpResponse<String> response = HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() != 200) {
+                throw new IllegalStateException("Failed to do an HTTP request to: " + purl + " Response code: " + response.statusCode());
             }
 
-        } catch (IOException e) {
+            String responseBody = response.body();
+            return JsonParser.parseString(responseBody).getAsJsonObject();
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
     public static URLConnection openConnection(URL url) throws IOException {
-       return  (proxy != null ? url.openConnection(proxy) : url.openConnection());
+       return url.openConnection(); // TODO
     }
 
     public static JsonElement parseConnection(URLConnection connection)
@@ -54,7 +54,7 @@ public class MojangJSONParser {
         }
     }
 
-    public static void setProxy(Proxy proxy) {
-        MojangJSONParser.proxy = proxy;
+    public static void setProxy(ProxySelector proxy) {
+        HTTP_CLIENT = HttpClient.newBuilder().proxy(proxy).build();
     }
 }

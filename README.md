@@ -20,7 +20,7 @@ Then add the dependency:
 <dependency>
     <groupId>de.snowii</groupId>
     <artifactId>mojang-api</artifactId>
-    <version>1.0.1</version>
+    <version>1.1.0</version>
 </dependency>
 ```
 ### Gradle
@@ -34,7 +34,7 @@ repositories {
 Then add the dependency:
 ```groovy
 dependencies {
-    implementation("de.snowii:mojang-api:1.0.1")
+    implementation("de.snowii:mojang-api:1.1.0")
 }
 ```
 
@@ -42,18 +42,12 @@ dependencies {
 
 Once you have added the library to your project, you can use the API in the MojangAPI class. For example, to get a GameProfile object for a given username:
 ```java
-    GameProfile profile = MojangAPI.getGameProfile("Notch", true);
+    GameProfile profile = MojangAPI.getGameProfile("Notch");
 ```
 
 You can also get a GameProfile by UUID:
 ```java
-     GameProfile profile = MojangAPI.getGameProfile(UUID.fromString("7bd9c2cb-079f-4f5b-925d-4bffdcf24aa8"), true);
-```
-The boolean parameter in both methods tells the API whether to cache the profile or not. It is highly recommended to enable caching if you will be using the same profile multiple times.
-
-If you do use the cache, it's important to clear it when you're done using the API:
-```java
-     MojangAPI.clearCache();
+     GameProfile profile = MojangAPI.getGameProfile(UUID.fromString("7bd9c2cb-079f-4f5b-925d-4bffdcf24aa8"));
 ```
 ### Using a Proxy
 

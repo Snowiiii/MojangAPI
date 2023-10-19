@@ -1,6 +1,6 @@
 plugins {
     `java-library`
-    id("de.chojo.publishdata") version "1.0.9"
+    id("de.chojo.publishdata") version "1.2.5"
     `maven-publish`
 }
 
@@ -13,13 +13,13 @@ repositories {
 }
 
 publishData {
-    useEldoNexusRepos(useMain = false)
+    useEldoNexusRepos(dev = false)
     publishComponent("java")
 }
 
 dependencies {
     implementation("com.google.code.gson:gson:2.10.1")
-    implementation("org.jetbrains:annotations:24.0.1")
+    compileOnly("org.jetbrains:annotations:24.0.1")
 
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")

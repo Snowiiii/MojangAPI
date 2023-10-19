@@ -16,35 +16,39 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @SuppressWarnings("unused")
 public class MojangAPI {
-    private static final Map<UUID, GameProfile> cachedUUIDProfiles = Collections.synchronizedMap(new HashMap<>());
-    private static final Map<String, GameProfile> cachedNameProfiles = Collections.synchronizedMap(new HashMap<>());
+    private static final Map<UUID, GameProfile> cachedUUIDProfiles = new ConcurrentHashMap<>();
+    private static final Map<String, GameProfile> cachedNameProfiles = new ConcurrentHashMap<>();
 
-    private static final Map<String, NameAvailability> cachedNameAvailabilities = new HashMap<>();
+    private static final Map<String, NameAvailability> cachedNameAvailabilities = new ConcurrentHashMap<>();
 
 
     public static @Nullable GameProfile getGameProfile(final @NotNull UUID uuid, final boolean cache) {
-        if (cachedUUIDProfiles.containsKey(uuid)) return cachedUUIDProfiles.get(uuid);
-        JsonObject object = MojangJSONParser.parseURL("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid + "?unsigned=false");
-        if (object == null) return null;
-        GameProfile gameProfile = new GameProfile(object.get("name").getAsString(), uuid);
-        gameProfile.setTextureProperties(parseTextureProperties(object));
-        if (cache) cachedUUIDProfiles.put(uuid, gameProfile);
-        return gameProfile;
+        return cachedUUIDProfiles.computeIfAbsent(uuid, (key) -> {
+            JsonObject object = MojangJSONParser.parseURL("https://sessionserver.mojang.com/session/minecraft/profile/" + key + "?unsigned=false");
+            if (object == null) return null;
+            GameProfile gameProfile = new GameProfile(object.get("name").getAsString(), key);
+            gameProfile.setTextureProperties(parseTextureProperties(object));
+            if (cache) cachedUUIDProfiles.put(key, gameProfile);
+            return gameProfile;
+        });
     }
 
     /**
      * @return a GameProfile but without Skin Properties
      */
     public static @Nullable GameProfile getGameProfile(final @NotNull String name, final boolean cache) {
-        if (cachedNameProfiles.containsKey(name)) return cachedNameProfiles.get(name);
-        JsonObject object = MojangJSONParser.parseURL("https://api.mojang.com/users/profiles/minecraft/" + name + "?unsigned=false");
-        if (object == null) return null;
-        GameProfile gameProfile = new GameProfile(name, UUIDConverter.fromStringWithoutDashes(object.get("id").getAsString()));
-        if (cache) cachedNameProfiles.put(name, gameProfile);
-        return gameProfile;
+        return cachedNameProfiles.computeIfAbsent(name, (key) -> {
+            JsonObject object = MojangJSONParser.parseURL("https://api.mojang.com/users/profiles/minecraft/" + key + "?unsigned=false");
+            if (object == null) return null;
+            UUID uuid = UUIDConverter.fromStringWithoutDashes(object.get("id").getAsString());
+            GameProfile gameProfile = new GameProfile(name, uuid);
+            if (cache) cachedNameProfiles.put(name, gameProfile);
+            return gameProfile;
+        });
     }
 
     private static List<TextureProperty> parseTextureProperties(final JsonObject object) {
@@ -55,10 +59,7 @@ public class MojangAPI {
 
             String name = property.get("name").getAsString();
             String value = property.get("value").getAsString();
-            String signature = null;
-            if (property.has("signature")) {
-                signature = property.get("signature").getAsString();
-            }
+            String signature = property.get("signature") != null ? property.get("signature").getAsString() : null;
             textureProperties.add(new TextureProperty(name, value, signature));
         }
         return textureProperties;
@@ -71,12 +72,13 @@ public class MojangAPI {
      * @return NameAvailability Enum
      */
     public static @Nullable NameAvailability getNameAvailability(final @NotNull String name, final boolean cache) {
-        if (cachedNameAvailabilities.containsKey(name)) return cachedNameAvailabilities.get(name);
-        JsonObject object = MojangJSONParser.parseURL("https://api.minecraftservices.com/minecraft/profile/" + name + "/available");
-        if (object == null) return null;
-        NameAvailability availability = NameAvailability.valueOf(object.get("status").getAsString());
-        if (cache) cachedNameAvailabilities.put(name, availability);
-        return availability;
+        return cachedNameAvailabilities.computeIfAbsent(name, (key) -> {
+            JsonObject object = MojangJSONParser.parseURL("https://api.minecraftservices.com/minecraft/profile/" + key + "/available");
+            if (object == null) return null;
+            NameAvailability availability = NameAvailability.valueOf(object.get("status").getAsString());
+            if (cache) cachedNameAvailabilities.put(name, availability);
+            return availability;
+        });
     }
 
     // Microsoft

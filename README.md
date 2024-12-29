@@ -55,7 +55,3 @@ If you are using a proxy, you can set it at the beginning of your code with:
 ```java
       MojangJSONParser.setProxy(<proxy>);
 ```
-
-### Conclusion
-
-The Mojang API for Java is a powerful tool for Java developers who want to interact with Mojang's APIs. By using this library, you can quickly and easily fetch game profiles and UUIDs, and cache them for faster access.
